@@ -4,7 +4,7 @@
 #
 Name     : libsmbios
 Version  : 2.4.2
-Release  : 5
+Release  : 6
 URL      : https://github.com/dell/libsmbios/archive/v2.4.2.tar.gz
 Source0  : https://github.com/dell/libsmbios/archive/v2.4.2.tar.gz
 Summary  : C libraries for accessing dmi data
