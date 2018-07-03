@@ -4,7 +4,7 @@
 #
 Name     : libsmbios
 Version  : 2.4.2
-Release  : 7
+Release  : 8
 URL      : https://github.com/dell/libsmbios/archive/v2.4.2.tar.gz
 Source0  : https://github.com/dell/libsmbios/archive/v2.4.2.tar.gz
 Summary  : C libraries for accessing dmi data
@@ -13,6 +13,7 @@ License  : BSD-3-Clause GPL-2.0 OSL-2.0
 Requires: libsmbios-bin
 Requires: libsmbios-python3
 Requires: libsmbios-lib
+Requires: libsmbios-license
 Requires: libsmbios-locales
 Requires: libsmbios-man
 Requires: libsmbios-data
@@ -33,6 +34,7 @@ headers in and below this directory are mostly imported from boost with all
 Summary: bin components for the libsmbios package.
 Group: Binaries
 Requires: libsmbios-data
+Requires: libsmbios-license
 Requires: libsmbios-man
 
 %description bin
@@ -59,13 +61,31 @@ Provides: libsmbios-devel
 dev components for the libsmbios package.
 
 
+%package doc
+Summary: doc components for the libsmbios package.
+Group: Documentation
+Requires: libsmbios-man
+
+%description doc
+doc components for the libsmbios package.
+
+
 %package lib
 Summary: lib components for the libsmbios package.
 Group: Libraries
 Requires: libsmbios-data
+Requires: libsmbios-license
 
 %description lib
 lib components for the libsmbios package.
+
+
+%package license
+Summary: license components for the libsmbios package.
+Group: Default
+
+%description license
+license components for the libsmbios package.
 
 
 %package locales
@@ -110,7 +130,7 @@ export http_proxy=http://127.0.0.1:9/
 export https_proxy=http://127.0.0.1:9/
 export no_proxy=localhost,127.0.0.1,0.0.0.0
 export LANG=C
-export SOURCE_DATE_EPOCH=1528377520
+export SOURCE_DATE_EPOCH=1530580581
 %autogen --disable-static
 make  %{?_smp_mflags}
 
@@ -122,8 +142,14 @@ export no_proxy=localhost,127.0.0.1,0.0.0.0
 make VERBOSE=1 V=1 %{?_smp_mflags} check
 
 %install
-export SOURCE_DATE_EPOCH=1528377520
+export SOURCE_DATE_EPOCH=1530580581
 rm -rf %{buildroot}
+mkdir -p %{buildroot}/usr/share/doc/libsmbios
+cp COPYING-OSL %{buildroot}/usr/share/doc/libsmbios/COPYING-OSL
+cp COPYING-GPL %{buildroot}/usr/share/doc/libsmbios/COPYING-GPL
+cp COPYING %{buildroot}/usr/share/doc/libsmbios/COPYING
+cp pkg/debian/copyright %{buildroot}/usr/share/doc/libsmbios/pkg_debian_copyright
+cp doc/getopt/LICENSE %{buildroot}/usr/share/doc/libsmbios/doc_getopt_LICENSE
 %make_install
 %find_lang libsmbios
 
@@ -148,7 +174,7 @@ rm -rf %{buildroot}
 
 %files data
 %defattr(-,root,root,-)
-/usr/share/smbios-utils/__pycache__/cli.cpython-36.pyc
+/usr/share/smbios-utils/__pycache__/cli.cpython-37.pyc
 /usr/share/smbios-utils/cli.py
 /usr/share/smbios-utils/token_blacklist.csv
 /usr/share/smbios-utils/token_list.csv
@@ -187,10 +213,21 @@ rm -rf %{buildroot}
 /usr/lib64/libsmbios_c.so
 /usr/lib64/pkgconfig/libsmbios_c.pc
 
+%files doc
+%defattr(0644,root,root,0755)
+%doc /usr/share/doc/libsmbios/*
+
 %files lib
 %defattr(-,root,root,-)
 /usr/lib64/libsmbios_c.so.2
 /usr/lib64/libsmbios_c.so.2.2.1
+
+%files license
+%defattr(-,root,root,-)
+/usr/share/doc/libsmbios/COPYING
+/usr/share/doc/libsmbios/COPYING-GPL
+/usr/share/doc/libsmbios/COPYING-OSL
+/usr/share/doc/libsmbios/doc_getopt_LICENSE
 
 %files man
 %defattr(-,root,root,-)
