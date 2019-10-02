@@ -4,20 +4,20 @@
 #
 Name     : libsmbios
 Version  : 2.4.2
-Release  : 14
+Release  : 15
 URL      : https://github.com/dell/libsmbios/archive/v2.4.2.tar.gz
 Source0  : https://github.com/dell/libsmbios/archive/v2.4.2.tar.gz
 Summary  : C libraries for accessing dmi data
 Group    : Development/Tools
-License  : BSD-3-Clause GPL-2.0 OSL-2.0
-Requires: libsmbios-bin
-Requires: libsmbios-python3
-Requires: libsmbios-lib
-Requires: libsmbios-license
-Requires: libsmbios-locales
-Requires: libsmbios-man
-Requires: libsmbios-data
-Requires: libsmbios-python
+License  : BSD-3-Clause GPL-2.0 OSL-2.1
+Requires: libsmbios-bin = %{version}-%{release}
+Requires: libsmbios-data = %{version}-%{release}
+Requires: libsmbios-lib = %{version}-%{release}
+Requires: libsmbios-license = %{version}-%{release}
+Requires: libsmbios-locales = %{version}-%{release}
+Requires: libsmbios-man = %{version}-%{release}
+Requires: libsmbios-python = %{version}-%{release}
+Requires: libsmbios-python3 = %{version}-%{release}
 BuildRequires : doxygen
 BuildRequires : gettext
 BuildRequires : graphviz
@@ -33,9 +33,8 @@ headers in and below this directory are mostly imported from boost with all
 %package bin
 Summary: bin components for the libsmbios package.
 Group: Binaries
-Requires: libsmbios-data
-Requires: libsmbios-license
-Requires: libsmbios-man
+Requires: libsmbios-data = %{version}-%{release}
+Requires: libsmbios-license = %{version}-%{release}
 
 %description bin
 bin components for the libsmbios package.
@@ -52,29 +51,21 @@ data components for the libsmbios package.
 %package dev
 Summary: dev components for the libsmbios package.
 Group: Development
-Requires: libsmbios-lib
-Requires: libsmbios-bin
-Requires: libsmbios-data
-Provides: libsmbios-devel
+Requires: libsmbios-lib = %{version}-%{release}
+Requires: libsmbios-bin = %{version}-%{release}
+Requires: libsmbios-data = %{version}-%{release}
+Provides: libsmbios-devel = %{version}-%{release}
+Requires: libsmbios = %{version}-%{release}
 
 %description dev
 dev components for the libsmbios package.
 
 
-%package doc
-Summary: doc components for the libsmbios package.
-Group: Documentation
-Requires: libsmbios-man
-
-%description doc
-doc components for the libsmbios package.
-
-
 %package lib
 Summary: lib components for the libsmbios package.
 Group: Libraries
-Requires: libsmbios-data
-Requires: libsmbios-license
+Requires: libsmbios-data = %{version}-%{release}
+Requires: libsmbios-license = %{version}-%{release}
 
 %description lib
 lib components for the libsmbios package.
@@ -107,7 +98,7 @@ man components for the libsmbios package.
 %package python
 Summary: python components for the libsmbios package.
 Group: Default
-Requires: libsmbios-python3
+Requires: libsmbios-python3 = %{version}-%{release}
 
 %description python
 python components for the libsmbios package.
@@ -129,27 +120,36 @@ python3 components for the libsmbios package.
 export http_proxy=http://127.0.0.1:9/
 export https_proxy=http://127.0.0.1:9/
 export no_proxy=localhost,127.0.0.1,0.0.0.0
-export LANG=C
-export SOURCE_DATE_EPOCH=1530580581
+export LANG=C.UTF-8
+export SOURCE_DATE_EPOCH=1569978702
+export GCC_IGNORE_WERROR=1
+export AR=gcc-ar
+export RANLIB=gcc-ranlib
+export NM=gcc-nm
+export CFLAGS="$CFLAGS -O3 -ffat-lto-objects -flto=4 "
+export FCFLAGS="$CFLAGS -O3 -ffat-lto-objects -flto=4 "
+export FFLAGS="$CFLAGS -O3 -ffat-lto-objects -flto=4 "
+export CXXFLAGS="$CXXFLAGS -O3 -ffat-lto-objects -flto=4 "
 %autogen --disable-static
 make  %{?_smp_mflags}
 
 %check
-export LANG=C
+export LANG=C.UTF-8
 export http_proxy=http://127.0.0.1:9/
 export https_proxy=http://127.0.0.1:9/
 export no_proxy=localhost,127.0.0.1,0.0.0.0
-make VERBOSE=1 V=1 %{?_smp_mflags} check
+make VERBOSE=1 V=1 %{?_smp_mflags} check || :
 
 %install
-export SOURCE_DATE_EPOCH=1530580581
+export SOURCE_DATE_EPOCH=1569978702
 rm -rf %{buildroot}
-mkdir -p %{buildroot}/usr/share/doc/libsmbios
-cp COPYING-OSL %{buildroot}/usr/share/doc/libsmbios/COPYING-OSL
-cp COPYING-GPL %{buildroot}/usr/share/doc/libsmbios/COPYING-GPL
-cp COPYING %{buildroot}/usr/share/doc/libsmbios/COPYING
-cp pkg/debian/copyright %{buildroot}/usr/share/doc/libsmbios/pkg_debian_copyright
-cp doc/getopt/LICENSE %{buildroot}/usr/share/doc/libsmbios/doc_getopt_LICENSE
+mkdir -p %{buildroot}/usr/share/package-licenses/libsmbios
+cp COPYING %{buildroot}/usr/share/package-licenses/libsmbios/COPYING
+cp COPYING-GPL %{buildroot}/usr/share/package-licenses/libsmbios/COPYING-GPL
+cp COPYING-OSL %{buildroot}/usr/share/package-licenses/libsmbios/COPYING-OSL
+cp doc/getopt/LICENSE %{buildroot}/usr/share/package-licenses/libsmbios/doc_getopt_LICENSE
+cp pkg/debian/copyright %{buildroot}/usr/share/package-licenses/libsmbios/pkg_debian_copyright
+cp src/bin/getopts_LICENSE.txt %{buildroot}/usr/share/package-licenses/libsmbios/src_bin_getopts_LICENSE.txt
 %make_install
 %find_lang libsmbios
 
@@ -174,7 +174,6 @@ cp doc/getopt/LICENSE %{buildroot}/usr/share/doc/libsmbios/doc_getopt_LICENSE
 
 %files data
 %defattr(-,root,root,-)
-/usr/share/smbios-utils/__pycache__/cli.cpython-37.pyc
 /usr/share/smbios-utils/cli.py
 /usr/share/smbios-utils/token_blacklist.csv
 /usr/share/smbios-utils/token_list.csv
@@ -213,24 +212,22 @@ cp doc/getopt/LICENSE %{buildroot}/usr/share/doc/libsmbios/doc_getopt_LICENSE
 /usr/lib64/libsmbios_c.so
 /usr/lib64/pkgconfig/libsmbios_c.pc
 
-%files doc
-%defattr(0644,root,root,0755)
-%doc /usr/share/doc/libsmbios/*
-
 %files lib
 %defattr(-,root,root,-)
 /usr/lib64/libsmbios_c.so.2
 /usr/lib64/libsmbios_c.so.2.2.1
 
 %files license
-%defattr(-,root,root,-)
-/usr/share/doc/libsmbios/COPYING
-/usr/share/doc/libsmbios/COPYING-GPL
-/usr/share/doc/libsmbios/COPYING-OSL
-/usr/share/doc/libsmbios/doc_getopt_LICENSE
+%defattr(0644,root,root,0755)
+/usr/share/package-licenses/libsmbios/COPYING
+/usr/share/package-licenses/libsmbios/COPYING-GPL
+/usr/share/package-licenses/libsmbios/COPYING-OSL
+/usr/share/package-licenses/libsmbios/doc_getopt_LICENSE
+/usr/share/package-licenses/libsmbios/pkg_debian_copyright
+/usr/share/package-licenses/libsmbios/src_bin_getopts_LICENSE.txt
 
 %files man
-%defattr(-,root,root,-)
+%defattr(0644,root,root,0755)
 /usr/share/man/man1/smbios-battery-ctl.1
 /usr/share/man/man1/smbios-get-ut-data.1
 /usr/share/man/man1/smbios-keyboard-ctl.1
