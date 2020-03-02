@@ -4,10 +4,10 @@
 #
 Name     : libsmbios
 Version  : 2.4.2
-Release  : 17
+Release  : 18
 URL      : https://github.com/dell/libsmbios/archive/v2.4.2.tar.gz
 Source0  : https://github.com/dell/libsmbios/archive/v2.4.2.tar.gz
-Summary  : C libraries for accessing dmi data
+Summary  : A library for providing access to as much BIOS information as possible
 Group    : Development/Tools
 License  : BSD-3-Clause GPL-2.0 OSL-2.1
 Requires: libsmbios-bin = %{version}-%{release}
@@ -26,9 +26,14 @@ BuildRequires : perl(XML::Parser)
 BuildRequires : pkgconfig(libxml-2.0)
 
 %description
-We have decided to use a boost-style configuration system for libsmbios. The
-headers in and below this directory are mostly imported from boost with all
-"BOOST" prefixes changed to LIBSMBIOS.
+getopts v0.3.0 {http://www.dragon-ware.com/~steve/projects/getopts}
+Written by: Steve Mertz <steve@dragon-ware.com>
+License: BSD Style
+Development Environment: Slackware 7.1, gcc 2.95.2
+Development Environment: Slackware 8.1, gcc 2.95.3
+Development Environment: FreeBSD 5.0-CURRENT (20020210)
+Known to work on: OpenBSD, Windows, FreeBSD, Linux
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
 %package bin
 Summary: bin components for the libsmbios package.
@@ -55,6 +60,7 @@ Requires: libsmbios-lib = %{version}-%{release}
 Requires: libsmbios-bin = %{version}-%{release}
 Requires: libsmbios-data = %{version}-%{release}
 Provides: libsmbios-devel = %{version}-%{release}
+Requires: libsmbios = %{version}-%{release}
 Requires: libsmbios = %{version}-%{release}
 
 %description dev
@@ -115,13 +121,15 @@ python3 components for the libsmbios package.
 
 %prep
 %setup -q -n libsmbios-2.4.2
+cd %{_builddir}/libsmbios-2.4.2
 
 %build
 export http_proxy=http://127.0.0.1:9/
 export https_proxy=http://127.0.0.1:9/
 export no_proxy=localhost,127.0.0.1,0.0.0.0
 export LANG=C.UTF-8
-export SOURCE_DATE_EPOCH=1569978702
+export SOURCE_DATE_EPOCH=1583168132
+# -Werror is for werrorists
 export GCC_IGNORE_WERROR=1
 export AR=gcc-ar
 export RANLIB=gcc-ranlib
@@ -141,15 +149,15 @@ export no_proxy=localhost,127.0.0.1,0.0.0.0
 make VERBOSE=1 V=1 %{?_smp_mflags} check || :
 
 %install
-export SOURCE_DATE_EPOCH=1569978702
+export SOURCE_DATE_EPOCH=1583168132
 rm -rf %{buildroot}
 mkdir -p %{buildroot}/usr/share/package-licenses/libsmbios
-cp COPYING %{buildroot}/usr/share/package-licenses/libsmbios/COPYING
-cp COPYING-GPL %{buildroot}/usr/share/package-licenses/libsmbios/COPYING-GPL
-cp COPYING-OSL %{buildroot}/usr/share/package-licenses/libsmbios/COPYING-OSL
-cp doc/getopt/LICENSE %{buildroot}/usr/share/package-licenses/libsmbios/doc_getopt_LICENSE
-cp pkg/debian/copyright %{buildroot}/usr/share/package-licenses/libsmbios/pkg_debian_copyright
-cp src/bin/getopts_LICENSE.txt %{buildroot}/usr/share/package-licenses/libsmbios/src_bin_getopts_LICENSE.txt
+cp %{_builddir}/libsmbios-2.4.2/COPYING %{buildroot}/usr/share/package-licenses/libsmbios/4afbd7e5ca260d6c64092024bac05696502dc793
+cp %{_builddir}/libsmbios-2.4.2/COPYING-GPL %{buildroot}/usr/share/package-licenses/libsmbios/4afbd7e5ca260d6c64092024bac05696502dc793
+cp %{_builddir}/libsmbios-2.4.2/COPYING-OSL %{buildroot}/usr/share/package-licenses/libsmbios/3f1315be456c9c668553327b4a3dec6b2c0c78ee
+cp %{_builddir}/libsmbios-2.4.2/doc/getopt/LICENSE %{buildroot}/usr/share/package-licenses/libsmbios/015f46d67e4031de55a746be5cbfdd9b648fe3ad
+cp %{_builddir}/libsmbios-2.4.2/pkg/debian/copyright %{buildroot}/usr/share/package-licenses/libsmbios/91ae711b5bb5119d16aa4a696a0c0d28b5c23373
+cp %{_builddir}/libsmbios-2.4.2/src/bin/getopts_LICENSE.txt %{buildroot}/usr/share/package-licenses/libsmbios/8c56891520694dd69dbf83c05e79b40a7505965b
 %make_install
 %find_lang libsmbios
 
@@ -219,12 +227,11 @@ cp src/bin/getopts_LICENSE.txt %{buildroot}/usr/share/package-licenses/libsmbios
 
 %files license
 %defattr(0644,root,root,0755)
-/usr/share/package-licenses/libsmbios/COPYING
-/usr/share/package-licenses/libsmbios/COPYING-GPL
-/usr/share/package-licenses/libsmbios/COPYING-OSL
-/usr/share/package-licenses/libsmbios/doc_getopt_LICENSE
-/usr/share/package-licenses/libsmbios/pkg_debian_copyright
-/usr/share/package-licenses/libsmbios/src_bin_getopts_LICENSE.txt
+/usr/share/package-licenses/libsmbios/015f46d67e4031de55a746be5cbfdd9b648fe3ad
+/usr/share/package-licenses/libsmbios/3f1315be456c9c668553327b4a3dec6b2c0c78ee
+/usr/share/package-licenses/libsmbios/4afbd7e5ca260d6c64092024bac05696502dc793
+/usr/share/package-licenses/libsmbios/8c56891520694dd69dbf83c05e79b40a7505965b
+/usr/share/package-licenses/libsmbios/91ae711b5bb5119d16aa4a696a0c0d28b5c23373
 
 %files man
 %defattr(0644,root,root,0755)
