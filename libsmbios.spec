@@ -4,7 +4,7 @@
 #
 Name     : libsmbios
 Version  : 2.4.2
-Release  : 18
+Release  : 19
 URL      : https://github.com/dell/libsmbios/archive/v2.4.2.tar.gz
 Source0  : https://github.com/dell/libsmbios/archive/v2.4.2.tar.gz
 Summary  : A library for providing access to as much BIOS information as possible
